@@ -1,23 +1,33 @@
 <script>
-    export let view;
-    export let preload;
     export let layout;
     export let NotFound;
-    let {view:v,preload:p,layout:l,...props} = $$props;
-
+    export let viewProps;
+    export let loading;
+    export let error;
 
 </script>
-{#if NotFound}
-    <svelte:component this={NotFound}  />
-{:else}
-    {#await preload then preload}
-        {#if layout}
-            <svelte:component this={layout} {preload} {...props}>
-                <svelte:component this={view} {preload} {...props}/>
+{#await viewProps}
+    {#if layout}
+            <svelte:component this={layout}>
+                <svelte:component this={loading}/>
             </svelte:component>
         {:else}
-            <svelte:component this={view} {preload} {...props}/>
+            <svelte:component this={loading}/>
+    {/if}
+{:then props}
+    {#if viewProps.NotFound}
+        <svelte:component this={props.NotFound}  />
+    {:else}
+        {#if props.layout||layout}
+            <svelte:component this={props.layout || layout} {...props}>
+                <svelte:component this={props.view} {...props}/>
+            </svelte:component>
+        {:else}
+            <svelte:component this={props.view} {...props}/>
         {/if}
+    {/if}
+{:catch error$}
+    <svelte:component this={error}  error={error$}/>
+{/await}
+
     
-    {/await}
-{/if}

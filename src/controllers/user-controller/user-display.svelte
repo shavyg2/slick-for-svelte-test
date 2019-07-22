@@ -1,7 +1,5 @@
 <script>
-    export let preload;
-
-    let user = preload;
+    export let user;
 </script>
 
 
